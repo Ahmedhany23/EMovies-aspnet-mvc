@@ -1,3 +1,7 @@
+using eMovies.Data;
+using eMovies.Data.Services;
+using Microsoft.EntityFrameworkCore;
+
 namespace EMovies
 {
     public class Program
@@ -7,8 +11,15 @@ namespace EMovies
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            
+            
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer("Data Source=Ahmed\\Sqlexpress;Initial Catalog=eMoviesApp-db;Integrated Security=True;Pooling=False;Trust Server Certificate = True"));
+            builder.Services.AddScoped<IActorsService, ActorsService>();
+
             builder.Services.AddControllersWithViews();
 
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -29,7 +40,7 @@ namespace EMovies
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
+            AppDbInitializer.Seed(app);
             app.Run();
         }
     }
